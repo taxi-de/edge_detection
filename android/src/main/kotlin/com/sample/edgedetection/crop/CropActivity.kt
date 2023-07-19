@@ -41,8 +41,20 @@ class CropActivity : BaseActivity(), ICropView.Proxy {
         mPresenter = CropPresenter(this, initialBundle)
         findViewById<ImageView>(R.id.crop).setOnClickListener {
             Log.e(TAG, "Crop touched!")
-            mPresenter.crop()
+            mPresenter.crop(::afterCrop)
             changeMenuVisibility(true)
+        }
+    }
+
+    fun afterCrop(mPresenter: CropPresenter) {
+        val initialBundle = intent.getBundleExtra(EdgeDetectionHandler.INITIAL_BUNDLE) as Bundle
+        if (initialBundle.getBoolean(EdgeDetectionHandler.SKIP_FINAL_SCREEN)) {
+            // mPresenter = CropPresenter(this, initialBundle)
+            Log.e(TAG, "Saving directly!")
+            mPresenter.save()
+            setResult(Activity.RESULT_OK)
+            System.gc()
+            finish()
         }
     }
 
@@ -70,6 +82,12 @@ class CropActivity : BaseActivity(), ICropView.Proxy {
         } else {
             menu.findItem(R.id.action_label).isVisible = false
             findViewById<ImageView>(R.id.crop).visibility = View.VISIBLE
+            if (initialBundle.getBoolean(EdgeDetectionHandler.SKIP_FINAL_SCREEN)) {
+                // setImageResource(R.drawable.eng2);
+                findViewById<ImageView>(R.id.crop).setImageResource(R.drawable.ic_done)
+            } else {
+                findViewById<ImageView>(R.id.crop).setImageResource(R.drawable.ic_crop)
+            }
         }
 
         return super.onCreateOptionsMenu(menu)

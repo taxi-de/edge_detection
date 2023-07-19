@@ -50,6 +50,7 @@ class EdgeDetectionHandler : MethodCallHandler, PluginRegistry.ActivityResultLis
         const val CROP_TITLE = "crop_title"
         const val CROP_BLACK_WHITE_TITLE = "crop_black_white_title"
         const val CROP_RESET_TITLE = "crop_reset_title"
+        const val SKIP_FINAL_SCREEN = "skip_final_screen"
     }
 
     fun setActivityPluginBinding(activityPluginBinding: ActivityPluginBinding) {
@@ -116,6 +117,7 @@ class EdgeDetectionHandler : MethodCallHandler, PluginRegistry.ActivityResultLis
         bundle.putString(CROP_BLACK_WHITE_TITLE, call.argument<String>(CROP_BLACK_WHITE_TITLE) as String)
         bundle.putString(CROP_RESET_TITLE, call.argument<String>(CROP_RESET_TITLE) as String)
         bundle.putBoolean(CAN_USE_GALLERY, call.argument<Boolean>(CAN_USE_GALLERY) as Boolean)
+        bundle.putBoolean(SKIP_FINAL_SCREEN, call.argument<Boolean>(SKIP_FINAL_SCREEN) as Boolean)
 
         initialIntent.putExtra(INITIAL_BUNDLE, bundle)
 
@@ -135,6 +137,7 @@ class EdgeDetectionHandler : MethodCallHandler, PluginRegistry.ActivityResultLis
         bundle.putString(CROP_BLACK_WHITE_TITLE, call.argument<String>(CROP_BLACK_WHITE_TITLE) as String )
         bundle.putString(CROP_RESET_TITLE, call.argument<String>(CROP_RESET_TITLE) as String)
         bundle.putBoolean(FROM_GALLERY, call.argument<Boolean>(FROM_GALLERY) as Boolean)
+        bundle.putBoolean(SKIP_FINAL_SCREEN, call.argument<Boolean>(SKIP_FINAL_SCREEN) as Boolean)
 
         initialIntent.putExtra(INITIAL_BUNDLE, bundle)
 

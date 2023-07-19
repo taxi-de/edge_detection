@@ -42,7 +42,7 @@ class CropPresenter(
         iCropView.getPaper().setImageBitmap(bitmap)
     }
 
-    fun crop() {
+    fun crop(afterCrop: (mPresenter: CropPresenter) -> Unit) {
         if (picture == null) {
             Log.i(TAG, "picture null?")
             return
@@ -67,6 +67,7 @@ class CropPresenter(
                 iCropView.getCroppedPaper().setImageBitmap(croppedBitmap)
                 iCropView.getPaper().visibility = View.GONE
                 iCropView.getPaperRect().visibility = View.GONE
+                afterCrop(this)
             }
     }
 
@@ -168,8 +169,10 @@ class CropPresenter(
                     cropPic.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
                     outStream.flush()
                     outStream.close()
-                    cropPic.recycle()
+                    // cropPic.recycle()
                     Log.i(TAG, "CroppedBitmap Saved")
+                } else {
+                    Log.i(TAG, "Bitmap not Saved")
                 }
             }
         }

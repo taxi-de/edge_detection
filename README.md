@@ -107,6 +107,7 @@ try {
         androidCropTitle: 'Crop',
         androidCropBlackWhiteTitle: 'Black White',
         androidCropReset: 'Reset',
+        skipFinalScreen: false, // return after cropscreen
     );
 } catch (e) {
     print(e);
@@ -120,6 +121,7 @@ try {
         androidCropTitle: 'Crop', // use custom localizations for android
         androidCropBlackWhiteTitle: 'Black White',
         androidCropReset: 'Reset',
+        skipFinalScreen: false, // return after cropscreen
     );
 } catch (e) {
     print(e);
@@ -170,8 +172,8 @@ try {
       </tr>
    </table>
 </div>
-   
-Using these native implementation   
+
+Using these native implementation
 <a>https://github.com/WeTransfer/WeScan</a>
 
 <a>https://github.com/KePeng1019/SmartPaperScan</a>
