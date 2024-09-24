@@ -28,6 +28,8 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 33
 
+    namespace "com.sample.edgedetectionexample"
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
