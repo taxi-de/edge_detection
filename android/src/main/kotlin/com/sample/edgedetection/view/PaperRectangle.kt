@@ -116,7 +116,7 @@ class PaperRectangle : View {
         return listOf(tl, tr, br, bl)
     }
 
-    fun onDraw(canvas: Canvas) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         rectPaint.color = Color.WHITE
