@@ -8,12 +8,12 @@ class EdgeDetection {
   /// Call this method to scan the object edge in live camera.
   static Future<bool> detectEdge(
     String saveTo, {
-    bool canUseGallery: true,
-    String androidScanTitle: "Scanning",
-    String androidCropTitle: "Crop",
-    String androidCropBlackWhiteTitle: "Black White",
-    String androidCropReset: "Reset",
-    bool skipFinalScreen: false,
+    bool canUseGallery = true,
+    String androidScanTitle = "Scanning",
+    String androidCropTitle = "Crop",
+    String androidCropBlackWhiteTitle = "Black White",
+    String androidCropReset = "Reset",
+    bool skipFinalScreen = false,
   }) async {
     return await _channel.invokeMethod('edge_detect', {
       'save_to': saveTo,
@@ -29,10 +29,10 @@ class EdgeDetection {
   /// Call this method to scan the object edge from a gallery image.
   static Future<bool> detectEdgeFromGallery(
     String saveTo, {
-    String androidCropTitle: "Crop",
-    String androidCropBlackWhiteTitle: "Black White",
-    String androidCropReset: "Reset",
-    bool skipFinalScreen: false,
+    String androidCropTitle = "Crop",
+    String androidCropBlackWhiteTitle = "Black White",
+    String androidCropReset = "Reset",
+    bool skipFinalScreen = false,
   }) async {
     print('aqui1:$saveTo');
     return await _channel.invokeMethod('edge_detect_gallery', {
