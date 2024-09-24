@@ -1,5 +1,4 @@
 package com.sample.edgedetection.scan
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -31,6 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.opencv.android.Utils
 import org.opencv.core.Core
+import org.opencv.core.Core.ROTATE_90_CLOCKWISE
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Size
@@ -171,7 +171,7 @@ class ScanPresenter constructor(
             )
         }
 
-        Log.d(TAG, "Selected preview size: ${size?.width}${size?.height}")
+        Log.i(TAG, "Selected preview size: ${size?.width}${size?.height}")
 
         size?.width?.toString()?.let { Log.i(TAG, it) }
         val param = mCamera?.parameters
@@ -210,9 +210,9 @@ class ScanPresenter constructor(
         if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS) && mCamera!!.parameters.supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
         {
             param?.focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
-            Log.d(TAG, "enabling autofocus")
+            Log.i(TAG, "enabling autofocus")
         } else {
-            Log.d(TAG, "autofocus not available")
+            Log.i(TAG, "autofocus not available")
         }
 
         param?.flashMode = Camera.Parameters.FLASH_MODE_OFF
@@ -222,11 +222,35 @@ class ScanPresenter constructor(
         mCamera?.enableShutterSound(false)
     }
 
+    private fun matrixResizer(sourceMatrix: Mat): Mat {
+        val sourceSize: Size = sourceMatrix.size()
+        var copied = Mat()
+        if (sourceSize.height < sourceSize.width) {
+            Core.rotate(sourceMatrix, copied, ROTATE_90_CLOCKWISE)
+        } else {
+            copied = sourceMatrix
+        }
+        val copiedSize: Size = copied.size()
+        return if (copiedSize.width > ScanConstants.MAX_SIZE.width || copiedSize.height > ScanConstants.MAX_SIZE.height) {
+            var useRatio = 0.0
+            val widthRatio: Double = ScanConstants.MAX_SIZE.width / copiedSize.width
+            val heightRatio: Double = ScanConstants.MAX_SIZE.height / copiedSize.height
+            useRatio = if(widthRatio > heightRatio)  widthRatio else heightRatio
+            val resizedImage = Mat()
+            val newSize = Size(copiedSize.width * useRatio, copiedSize.height * useRatio)
+            Imgproc.resize(copied, resizedImage, newSize)
+            resizedImage
+        } else {
+            copied
+        }
+    }
     fun detectEdge(pic: Mat) {
-        SourceManager.corners = processPicture(pic)
-        Imgproc.cvtColor(pic, pic, Imgproc.COLOR_RGB2BGRA)
-        SourceManager.pic = pic
-
+        Log.i("height", pic.size().height.toString())
+        Log.i("width", pic.size().width.toString())
+        val resizedMat = matrixResizer(pic)
+        SourceManager.corners = processPicture(resizedMat)
+        Imgproc.cvtColor(resizedMat, resizedMat, Imgproc.COLOR_RGB2BGRA)
+        SourceManager.pic = resizedMat
         val cropIntent = Intent(context, CropActivity::class.java)
         cropIntent.putExtra(EdgeDetectionHandler.INITIAL_BUNDLE, this.initialBundle)
         (context as Activity).startActivityForResult(cropIntent, REQUEST_CODE)

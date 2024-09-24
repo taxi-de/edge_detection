@@ -39,9 +39,11 @@ class _MyAppState extends State<MyApp> {
     String imagePath = join((await getApplicationSupportDirectory()).path,
         "${(DateTime.now().millisecondsSinceEpoch / 1000).round()}.jpeg");
 
+    bool success = false;
+
     try {
       //Make sure to await the call to detectEdge.
-      bool success = await EdgeDetection.detectEdge(
+      success = await EdgeDetection.detectEdge(
         imagePath,
         canUseGallery: true,
         androidScanTitle: 'Scanning', // use custom localizations for android
@@ -61,7 +63,9 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _imagePath = imagePath;
+      if (success) {
+        _imagePath = imagePath;
+      }
     });
   }
 
@@ -70,9 +74,10 @@ class _MyAppState extends State<MyApp> {
     String imagePath = join((await getApplicationSupportDirectory()).path,
         "${(DateTime.now().millisecondsSinceEpoch / 1000).round()}.jpeg");
 
+    bool success = false;
     try {
       //Make sure to await the call to detectEdgeFromGallery.
-      bool success = await EdgeDetection.detectEdgeFromGallery(
+      success = await EdgeDetection.detectEdgeFromGallery(
         imagePath,
         androidCropTitle: 'Crop', // use custom localizations for android
         androidCropBlackWhiteTitle: 'Black White',
@@ -90,7 +95,9 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _imagePath = imagePath;
+      if (success) {
+        _imagePath = imagePath;
+      }
     });
   }
 

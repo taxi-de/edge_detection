@@ -42,6 +42,9 @@ class ScanActivity : BaseActivity(), IScanView.Proxy {
             Log.i(TAG, "loading opencv error, exit")
             finish()
         }
+        else {
+            Log.i("OpenCV", "OpenCV loaded Successfully!");
+        }
 
         findViewById<View>(R.id.shut).setOnClickListener {
             if (mPresenter.canShut) {
@@ -51,7 +54,7 @@ class ScanActivity : BaseActivity(), IScanView.Proxy {
 
         // to hide the flashLight button from  SDK versions which we do not handle the permission for!
         findViewById<View>(R.id.flash).visibility = if
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q && baseContext.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU && baseContext.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
             View.VISIBLE else
                 View.GONE
 
@@ -128,10 +131,13 @@ class ScanActivity : BaseActivity(), IScanView.Proxy {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 val uri: Uri = data!!.data!!
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     onImageSelected(uri)
                 }
-            } else {
+            }else if(resultCode == Activity.RESULT_CANCELED){
+                mPresenter.start()
+            }
+            else {
                 if (intent.hasExtra(EdgeDetectionHandler.FROM_GALLERY) && intent.getBooleanExtra(EdgeDetectionHandler.FROM_GALLERY,false))
                     finish()
             }
@@ -146,7 +152,7 @@ class ScanActivity : BaseActivity(), IScanView.Proxy {
         else -> super.onOptionsItemSelected(item)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(Build.VERSION_CODES.P)
     fun onImageSelected(imageUri: Uri) {
         try {
             val iStream: InputStream = contentResolver.openInputStream(imageUri)!!
