@@ -51,7 +51,6 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    namespace 'com.sample.edgedetectionexample'
 }
 
 flutter {
